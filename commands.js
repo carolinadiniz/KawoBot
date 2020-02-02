@@ -59,18 +59,23 @@ chat = function(client, channel, username, message, self){
             // Say last message link
             if (message == '!link') {
                 client.say(channel, lastMessageLink)
+                console.log(cyan + `COMANDO ADMIN SOLICITADO POR ${username['display-name']}: LAST MESSAGE LINK: ` + green + `${lastMessageLink}` + reset )
             }
             // UNTIMEOUT
             if (message == '!uto') {
                 client.unban(channel, lastTimeout)
+                console.log(cyan + `COMANDO ADMIN SOLICITADO POR ${username['display-name']}: UNTIMEOUT ${lastTimeout}: ` + reset )
             }
             // Disconnect
             if (message == '!disconnect kawobot') {
-                client.say(channel, 'Kawobot disconnect')
+                client.say(channel, 'Kawobot disconnected')
                 client.disconnect()
+                console.log(red + 'KAWOBOT DISCONNECTED' + reset)
             }
+            // Server status
             if (message == '!kawobot status'){
                 client.action(channel, 'Kawobot status: Ok')
+                console.log(cyan + `COMANDO ADMIN SOLICITADO POR ${username['display-name']}: SERVER STATUS = ON` + reset)
             }
         }
     

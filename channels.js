@@ -1,4 +1,4 @@
-//var channels = ['ninelaris', 'is_Kaworii', 'itzstrikerz']
-var channels = ['itzstrikerz', 'ninelaris']
+// Canais que o Kawobot se conecta
+var channels = ['ninelaris', 'itzstrikerz']
 
 module.exports = channels
