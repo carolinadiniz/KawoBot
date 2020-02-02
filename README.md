@@ -1,7 +1,7 @@
 # KawoBot
 Bot developed by Kaworii for witch platform
 
-<h2>It's my first time using javascript</h2>
+<p>It's my first time using javascript</p>
 
-Requirements
+<h4>Requirements</h4>
  * <a href='https://nodejs.org/'>NodeJs</a>
