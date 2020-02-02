@@ -90,7 +90,7 @@ chat = function(client, channel, username, message, self){
                 console.log(cyan + `COMANDO ADMIN SOLICITADO POR ${username['display-name']}: FILTER LINK (YOUTUBE) = OFF` + reset)
             }
         }
-    
+
 
 
     // BlackList
@@ -123,12 +123,12 @@ chat = function(client, channel, username, message, self){
 
                         if (linkFilterYout == true && message.includes('youtube.com') == true || linkFilterYout == true && message.includes('youtu.be') == true) {
                             client.deletemessage(channel, `${username['id']}`)
-                            console.log('MENSAGEM FOI APAGADAAAAAAAAAAAAAA LINK YOUTUBE')
+                            console.log(red + `Mensagem ${message} apagada por conter link` + reset)
                         } else if (linkFilterYout == false && message.includes('youtube.com') == true || linkFilterYout == false && message.includes('youtu.be') == true) {
-                            console.log('FILTRO DESLIGADO, MENSAGEM PERMITIDA')
+                        
                         } else {
                             client.deletemessage(channel, `${username['id']}`)
-                            console.log('MENSAGEM FOI APAGADAAAAAAAA LINK QUALQUER')
+                            console.log(red + `Mensagem ${message} apagada por conter link` + reset)
                         }
 
                     }
