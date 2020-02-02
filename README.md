@@ -2,4 +2,4 @@
 Bot developed by Kaworii for witch platform
 
 Requirements
- * NodeJs
+ * <a href='https://nodejs.org/'>NodeJs</a>
