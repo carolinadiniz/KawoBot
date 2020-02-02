@@ -14,6 +14,8 @@ reset = '\033[0m'
     lastTimeout = ''
     // Link filter
     var linkFilter = true
+    // 
+    var linkFilterYout = true
     // Last message link
     var lastMessageLink = ''
     
@@ -77,6 +79,16 @@ chat = function(client, channel, username, message, self){
                 client.action(channel, 'Kawobot status: Ok')
                 console.log(cyan + `COMANDO ADMIN SOLICITADO POR ${username['display-name']}: SERVER STATUS = ON` + reset)
             }
+            if (message == '!flink youtube on') {
+                linkFilterYout = true
+                client.action(channel, `Filtro de links (YouTube): ${linkFilterYout}`)
+                console.log(cyan + `COMANDO ADMIN SOLICITADO POR ${username['display-name']}: FILTER LINK (YOUTUBE) = ON` + reset)
+            }
+            if (message == '!flink youtube off') {
+                linkFilterYout = false
+                client.action(channel, `Filtro de links (YouTube): ${linkFilterYout}`)
+                console.log(cyan + `COMANDO ADMIN SOLICITADO POR ${username['display-name']}: FILTER LINK (YOUTUBE) = OFF` + reset)
+            }
         }
     
 
@@ -98,22 +110,37 @@ chat = function(client, channel, username, message, self){
 
 
     // LINK BLOCKER
-        if (linkFilter == true) {
-            if(message.includes('.com') == true || message.includes('.tv') == true || message.includes('.org') == true){
-                if (message.includes('youtube.com') == true || message.includes('youtu.be') == true || message.includes('.tv/ninelaris') == true){
-                    //client.deletemessage(channel, `${username['id']}`)
-                    lastMessageLink = `@${username['display-name']}` + ' disse: ' + message
-                } else {
-                    client.deletemessage(channel, `${username['id']}`)
-                    lastMessageLink = `@${username['display-name']}` + ' disse: ' + message
+        // If Youtube Filter On =>  Switch Link Filter On
+        if (linkFilterYout == true) {linkFilter = true}
+        
+        // If mod skip
+        if (MOD != true) {
+            // If ninelaris skip
+            if (message.includes('.tv/ninelaris') != true) {
+                if (linkFilter == true) {
+                    if (message.includes('.com') == true || message.includes('.org') || message.includes('.gg') || 
+                        message.includes('.net') || message.includes('.tv') || message.includes('.be')) {
+
+                        if (linkFilterYout == true && message.includes('youtube.com') == true || linkFilterYout == true && message.includes('youtu.be') == true) {
+                            client.deletemessage(channel, `${username['id']}`)
+                            console.log('MENSAGEM FOI APAGADAAAAAAAAAAAAAA LINK YOUTUBE')
+                        } else if (linkFilterYout == false && message.includes('youtube.com') == true || linkFilterYout == false && message.includes('youtu.be') == true) {
+                            console.log('FILTRO DESLIGADO, MENSAGEM PERMITIDA')
+                        } else {
+                            client.deletemessage(channel, `${username['id']}`)
+                            console.log('MENSAGEM FOI APAGADAAAAAAAA LINK QUALQUER')
+                        }
+
+                    }
                 }
             }
         }
 
 
     // ANYONE
+        // Testing Mod
         if (message == '!mod?') {
-            client.say(channel, `${MOD}`)
+            client.say(channel, `${username['display-name']} is mod: ${MOD}`)
         }
         if (message == '!kawobot'){
             client.action(channel, 'KawoBot é um Chat bot em desenvolvimento. Criado por @is_Kaworii com o objetivo de suprir necessidades específicas deste canal')
