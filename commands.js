@@ -112,10 +112,6 @@ chat = function(client, channel, username, message, self){
 
 
     // ANYONE
-        if (message == "teste") {
-            client.mods(channel)
-        }
-
         if (message == '!mod?') {
             client.say(channel, `${MOD}`)
         }
