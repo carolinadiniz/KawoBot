@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"kawobotdb.channels"}],"uuid":"d6bc79533d6542fdbf1f9754a28bad2d"}
