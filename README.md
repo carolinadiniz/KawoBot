@@ -5,3 +5,5 @@ Bot developed by Kaworii for witch platform
 
 <h4>Requirements</h4>
  * <a href='https://nodejs.org/'>NodeJs</a>
+ <br>
+ * <a href='https://www.mongodb.com/download-center/enterprise'>Mongodb</a>
