@@ -119,12 +119,15 @@ chat = function(client, channel, username, message, self){
             if (message.includes('.tv/ninelaris') != true) {
                 if (linkFilter == true) {
                     if (message.includes('.com') == true || message.includes('.org') || message.includes('.gg') || 
-                        message.includes('.net') || message.includes('.tv') || message.includes('.be')) {
-
-                        if (linkFilterYout == true && message.includes('youtube.com') == true || linkFilterYout == true && message.includes('youtu.be') == true) {
+                        message.includes('.net') || message.includes('.tv') || message.includes('.be') || message.includes('.br')) {
+                        if (message.includes('/stelaryss') == true || message.includes('/art_jack') == true) {
+                            
+                        // youtube on
+                        } else if (linkFilterYout == true && message.includes('youtube.com') == true || linkFilterYout == true && message.includes('youtu.be') == true) {
                             lastMessageLink = message
                             client.deletemessage(channel, `${username['id']}`)
                             console.log(red + `Mensagem ${message} apagada por conter link` + reset)
+                        // youtube off
                         } else if (linkFilterYout == false && message.includes('youtube.com') == true || linkFilterYout == false && message.includes('youtu.be') == true) {
                         
                         } else {
