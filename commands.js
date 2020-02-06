@@ -140,8 +140,20 @@ chat = function(client, channel, username, message, self){
 
 
     // ANYONE
-        // Parceiros
-        if (message == '!stelaryss' || message == '')
+        // Parceiros Ninelaris
+        if (channel == 'ninelaris') {
+            message = message.toLowerCase()
+            if (message == '!stelaryss' || message == '!erika') {
+                client.say(channel, 'twitch.tv/stelaryss')
+                client.say(channel, 'twitch.tv/stelaryss')
+            }
+            if (message == '!art' || message == '!art_jack') {
+                client.say(channel, 'twitch.tv/art_jack')
+                client.say(channel, 'twitch.tv/art_jack')
+            }
+        }
+        
+        
         
         // Testing Mod
         if (message == '!mod?') {
