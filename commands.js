@@ -28,10 +28,10 @@ chat = function(client, channel, username, message, self){
     }
     // ONLY AMD COMMAND
         // Validando Bot
-            var MOD = false
-            if (`${username['mod']}` == 'true'){
-                MOD = true
-            }
+        var MOD = false
+        if (`${username['mod']}` == 'true'){
+            MOD = true
+        }
   
         // Comandos
         message = message.toLowerCase()
@@ -122,11 +122,13 @@ chat = function(client, channel, username, message, self){
                         message.includes('.net') || message.includes('.tv') || message.includes('.be')) {
 
                         if (linkFilterYout == true && message.includes('youtube.com') == true || linkFilterYout == true && message.includes('youtu.be') == true) {
+                            lastMessageLink = message
                             client.deletemessage(channel, `${username['id']}`)
                             console.log(red + `Mensagem ${message} apagada por conter link` + reset)
                         } else if (linkFilterYout == false && message.includes('youtube.com') == true || linkFilterYout == false && message.includes('youtu.be') == true) {
                         
                         } else {
+                            lastMessageLink = message
                             client.deletemessage(channel, `${username['id']}`)
                             console.log(red + `Mensagem ${message} apagada por conter link` + reset)
                         }
@@ -138,6 +140,9 @@ chat = function(client, channel, username, message, self){
 
 
     // ANYONE
+        // Parceiros
+        if (message == '!stelaryss' || message == '')
+        
         // Testing Mod
         if (message == '!mod?') {
             client.say(channel, `${username['display-name']} is mod: ${MOD}`)
