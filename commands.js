@@ -18,10 +18,13 @@ reset = '\033[0m'
     var linkFilterYout = true
     // Last message link
     var lastMessageLink = ''
+
+    var boton = false
     
 
 
 chat = function(client, channel, username, message, self){
+    if (boton == true) {
     // IF BOT
     if (self) {
         return;
@@ -169,6 +172,6 @@ chat = function(client, channel, username, message, self){
             client.action(channel, 'MOD {!emote on [Emote only]  -  !emote off [Emote only off]  -  !flink on [Link filter ON]  -  !flink off [Link filter OFF]  -  !link [retorna última mensagem apagada por conter link]  -  !uto [remove último timeout (só funciona com kawobot)]} |||| ANY {!kcommands, !kawobot}')
         }
 
-    
+    }
 }
 module.exports = chat
