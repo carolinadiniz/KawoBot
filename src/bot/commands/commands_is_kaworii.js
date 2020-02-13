@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 require('../mongodb/config_commands')
 const config_commands = mongoose.model('config_commands')
+const Blacklist = require('../mongodb/blacklist')
 
 
 mongoose.Promise = global.Promise
@@ -94,11 +95,16 @@ chat = function (client, channel, username, message, self, configs) {
                     // CHANNEL
                     if (cmd['channel'] == channel) {
 
+                        // Comandos
+                        allcommands = ''
+                        for (let cmd of cmds) {if (cmd['permission'] == 'common' && cmd['channel'] == channel) {allcommands = allcommands + (cmd['name_command']) + ', '}}
+
                         // mensagem pura
                         Message = cmd['Message'].replace(cmd['Message'].split(' ')[0], '').replace(cmd['Message'].split(' ')[1], '').replace(cmd['Message'].split(' ')[2], '').replace(/^\s*/, '')
                         Message = Message.replace('[_USER_]', `${username['display-name']}`)
                         Message = Message.replace('[_PERCENT_]', `${Math.ceil(Math.random(0, 101) * 100)}%`)
                         Message = Message.replace('[_TOUSER_]', `${message.replace(message.split(' ')[0], '').replace(/^\s*/, '')}`)
+                        Message = Message.replace('[_COMMANDS_]', `${allcommands}`)
 
 
                         // MOD COMMANDS
@@ -126,14 +132,23 @@ chat = function (client, channel, username, message, self, configs) {
 
 
         // NON COMMAND
-        console.log(message.toLowerCase().split()[0])
+        // Blacklist
+        for (let blacklist of Blacklist.palavra) {
+            if (message.toLowerCase().split(' ').includes(blacklist) == true) {
+                client.timeout(channel, username['display-name'], 600, 'Frase ofensiva')   
+                client.say(channel, 'Palavra feia')
+            }
+        }
+        for (let blacklist of Blacklist.frase) {
+            if (message.toLowerCase().includes(blacklist) == true) {
+                client.timeout(channel, username['display-name'], 600, 'Palavra ofensiva')
+                client.say(channel, 'Frase feia')
+            }
+        }
 
     }
 
-
-
-
-    // off bot
+    // OFF BOT
     if (message == '!kawobot on' && username['mod'] == true || message == '!kawobot on' && username['badges']['broadcaster'] == '1') {
         client.action(channel, 'Kawobot Ativo')
     }

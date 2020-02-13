@@ -1,5 +1,5 @@
 module.exports = {
-    palavra: ['101 negão', 
+    frase: ['101 negão', 
     '101 negao', 
     'aguentava muito pau',
     'aguenta muito pau',
@@ -35,7 +35,7 @@ module.exports = {
     ']]] [[['
     ],
 
-    frase: ['sexo', 'xvideos', ']]][[['],
+    palavra: ['sexo', 'xvideos', 'punheta', ']]][[['],
 
     url: ['.com', '.net', '.org', '.gg', '.tv', '.be'],
 
