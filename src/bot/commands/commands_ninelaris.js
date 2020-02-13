@@ -1,175 +1,158 @@
 const mongoose = require('mongoose')
-require('../mongodb/config_channels')
-const Config = mongoose.model('config_channels')
-const BlackList = require('../mongodb/blacklist')
-
-var red, cyan, yel, green, reset, lastTimeout
-red = '\033[31m'
-cyan = '\033[36m'
-yel = '\033[1;33m'
-green = '\033[0;32m'
-reset = '\033[0m' 
-lastTimeout = {}
-WL = BlackList.whitelist
-mod = false
-allcommands = []
+require('../mongodb/config_commands')
+const config_commands = mongoose.model('config_commands')
+const Blacklist = require('../mongodb/blacklist')
 
 
-chat = function (client, channel, username, message, self, configs, Config_channels) {
-    // Verificar se está ativado no canal
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://localhost/kawobotdb', {useNewUrlParser: true, useUnifiedTopology: true})
+/**message = '!amor @Soraka'
+message = '!command delete amor Há [_PERCENT_] de <3 entre [_USER_] e [_TOUSER_]'*/
+
+
+chat = function (client, channel, username, message, self, configs) {
+    if (self) { return; }
+
+    // VERIFICA SE O BOT ESTÁ ATIVO NO CANAL
     if (configs['bot'] == true) {
-        
+
         // COMMAND
-        if (message.includes('!') == true) {
+        if (message.split(' ')[0][0].includes('!') == true) {
             
-            // MOD COMMAND
-            if (username['mod'] == true || username['badges']['broadcaster'] == 1) {
+            // MOD COMMANDS
+            if (username['mod'] == true || username['badges']['broadcaster'] == '1'){
 
-                message = message.toLowerCase()
-                command = '!mod?'
-                if (message == command) {
-                    client.action(channel, `@${username['display-name']} possui mod`)
-                    console.log(cyan + `Comando admin solicitado por ${yel + username['display-name']}: ${green + command}` + reset)
+                // ADD COMMAND
+                if (message.split(' ')[0].toLowerCase() == '!kcommand') {
+
+                    // ADD
+                    if (message.split(' ')[1].toLowerCase() == 'add') {
+                        novo_comando = true
+                        config_commands.find().then((commands) => { 
+
+                            // Verificando se o comando já existe
+                            for (let command of commands) {
+                                if (message.split(' ')[2] === command['name_command'] && command['channel'] == channel) {
+                                    novo_comando = false
+                                    console.log(`COMANDO <${message.split(' ')[2]}> JÁ EXISTENTE`)
+                                } 
+                            }
+                            
+                            // ADICIONANDO COMANDO
+                            if (novo_comando == true) {
+                                console.log(`NOVO COMANDO ADICIONADO: <${message.split(' ')[2]}>`)
+                                permission = 'common'
+                                type = 'say'
+                                if (message.includes('[_USER_]') || message.includes('[_TOUSER_]')) {
+                                    includes = true
+                                } else {
+                                    includes = false
+                                }
+                                
+                                // Corpo do comando
+                                const newCommand = {
+                                    permission: permission,
+                                    channel: channel,
+                                    type: type,
+                                    includes: includes,
+                                    name_command: message.split(' ')[2],
+                                    Message: message
+                                }
+                                
+                                // Dispara o comando
+                                new config_commands(newCommand).save().then(() => {
+                                    console.log('Schema criado com sucesso!')
+                                }).catch((err) => {
+                                    console.log('Falha ao criar Schema!')
+                                })
+
+                                client.say(channel, 'Novo comando Adicionado!')
+                            
+                            } else {
+
+                                config_commands.findOneAndUpdate({name_command: `${message.toLowerCase().split(' ')[2]}`}, {$set:{Message: message}}, {new: true}, (err, doc) => { console.log(doc) })
+                                client.say(channel, 'Comando atualizado')
+                                
+                            }
+                        })
+                        
+                    }
+
+                    // DELETE
+                    if (message.split(' ')[1].toLowerCase() == 'delete') {
+                        config_commands.deleteOne({name_command: message.toLowerCase().split(' ')[2]}, (err) => {
+                            client.say(channel, `Comando !${message.split(' ')[2].toLowerCase()} deletado`)
+                        })
+                    }
                 }
 
-                command = '!mod?true!'
-                if (message == command) {
-                   mod = true 
-                   console.log('MOD TRUE')
-                }
-
-                command = '!mod?false!'
-                if (message == command) {
-                    mod = false
-                    console.log('MOD FALSE')
-                }
-
-                command = '!mod?configs'
-                if (message == command) {
-                    client.say(channel, `bot: ${configs['bot']} | filter_link: ${configs['filter_link']} | filter_link_youtube: ${configs['filter_link_youtube']} `)
-                }
-                
-                command = '!mod?configs!'
-                if (message == command) {
-                   console.log(`bot: ${configs['bot']} | filter_link: ${configs['filter_link']} | filter_link_youtube: ${configs['filter_link_youtube']} `)
-                }
-
-                command = '!disconnect kawobot'
-                if (message == command) {
-                    client.say(channel, 'KawoBot Disconnected')
-                    client.disconnect()
-                    console.log(red + `Comando admin solicitado por ${yel + username['display-name']}` + red + ': ' + `${red + command}` + reset)
-                }
-
-                command = '!emote on'
-                if (message == command) {
-                    client.say(channel, '/emoteonly')
-                    console.log(cyan + `Comando admin solicitado por ${yel + username['display-name']}: ${green + command}` + reset)
-                }
-
-                command = '!emote off'
-                if (message == command) {
-                    client.say(channel, '/emoteonlyoff')
-                    console.log(cyan + `Comando admin solicitado por ${yel + username['display-name']}: ${green + command}` + reset)
-                }
-
-                command = '!flink on'
-                if (message == command) {
-                    Config.findOneAndUpdate({channel: 'ninelaris'}, {$set:{filter_link: true}}, {new: true}, (err, doc) => {console.log(doc)})
-                    client.action(channel, 'Filtro de links: ON')
-                    console.log(cyan + `Comando admin solicitado por ${yel + username['display-name']}: ${green + command}` + reset)
-                }
-                
-                command = '!flink off'
-                if (message == command) {
-                    Config.findOneAndUpdate({channel: 'ninelaris'}, {$set:{filter_link: false}}, {new: true}, (err, doc) => {console.log(doc)})
-                    client.action(channel, 'Filtro de links: OFF')
-                    console.log(cyan + `Comando admin solicitado por ${yel + username['display-name']}: ${green + command}` + reset)
-                }
-
-                command = '!link'
-                if (message == command) {
-                    client.say(channel, 'Mesagem de @' + lastMessageLink['nick'] + ': ' + lastMessageLink['mensagem'])
-                    console.log('Solicitação para reeviar ultima mensagem apagada: ' + lastMessageLink)
-                }
-                
-                command = '!flink youtube on'
-                if (message == command) {
-                    Config.findOneAndUpdate({channel: 'ninelaris'}, {$set:{filter_link_youtube: true}}, {new: true}, (err, doc) => {console.log(doc)})
-                    client.action(channel, 'Filtro de links YouTube: ON')
-                    console.log(cyan + `Comando admin solicitado por ${yel + username['display-name']}: ${green + command}` + reset)
-                }
-                
-                command = '!flink youtube off'
-                if (message == command) {
-                    Config.findOneAndUpdate({channel: 'ninelaris'}, {$set:{filter_link_youtube: false}}, {new: true}, (err, doc) => {console.log(doc)})
-                    client.action(channel, 'Filtro de links YouTube: OFF')
-                    console.log(cyan + `Comando admin solicitado por ${yel + username['display-name']}: ${green + command}` + reset)
-                }
             }
 
-            // COMMON COMMAND
+            // COMMON COMMANDS
+            config_commands.find().then((cmds) => {
+                for (let cmd of cmds) {
+
+                    // CHANNEL
+                    if (cmd['channel'] == channel) {
+
+                        // Comandos
+                        allcommands = ''
+                        for (let cmd of cmds) {if (cmd['permission'] == 'common' && cmd['channel'] == channel) {allcommands = allcommands + (cmd['name_command']) + ', '}}
+
+                        // mensagem pura
+                        Message = cmd['Message'].replace(cmd['Message'].split(' ')[0], '').replace(cmd['Message'].split(' ')[1], '').replace(cmd['Message'].split(' ')[2], '').replace(/^\s*/, '')
+                        Message = Message.replace('[_USER_]', `${username['display-name']}`)
+                        Message = Message.replace('[_PERCENT_]', `${Math.ceil(Math.random(0, 101) * 100)}%`)
+                        Message = Message.replace('[_TOUSER_]', `${message.replace(message.split(' ')[0], '').replace(/^\s*/, '')}`)
+                        Message = Message.replace('[_COMMANDS_]', `${allcommands}`)
+
+
+                        // MOD COMMANDS
+                        if (cmd['permission'] == 'mod' && username['mod'] == true || cmd['permission'] == 'mod' && username['badges']['broadcaster'] == '1') {
+                            if (message.toLowerCase().split(' ')[0].substr(1) == cmd['name_command']) {
+                                client.say(channel, Message)
+                            } 
+                        }
+
+                        // COMMON COMMANDS
+                        if (cmd['permission'] == 'common') {
+                            if (message.toLowerCase().split(' ')[0].substr(1) == cmd['name_command']) {
+                                client.say(channel, Message)
+                            }
+                        }
+                    }
+                }
+            })
+            
+            
+            
+
 
         }
 
 
-
-
-        // NOT COMMAND
-        
-            // FILTER LINK
-            if (message.includes('.') == true || message.includes(',')) {
-                if (configs['filter_link'] == true) {
-                    if (username['mod'] == mod){
-                        for (let url of BlackList.url) {
-                            if (message.includes(url) == true ) {                                 
-                                if (message.includes(WL[0]) == true || message.includes(WL[1]) == true || message.includes(WL[2]) == true) {
-                                    console.log(yel + `@${username['display-name']}`+ reset + cyan + '  Usou link de parceiro: ' + green + `${message}` + reset)
-                                
-                                } else if (configs['filter_link_youtube'] == true && message.includes('youtube.com') == true || configs['filter_link_youtube'] == true && message.includes('youtu.be') == true) {
-                                    lastMessageLink = { nick: username["display-name"],
-                                                        mensage: message}
-                                    client.deletemessage(channel, `${username['id']}`)
-                                    console.log(red + `Mensagem "${message}" de @${username["display-name"]} apagada por conter link` + reset)
-                                
-                                } else if (configs['filter_link_youtube'] == false && message.includes('youtube.com') == true || configs['filter_link_youtube'] == false && message.includes('youtu.be') == true) {
-                                    // do nothing
-                                
-                                } else {
-                                    lastMessageLink = { nick: username["display-name"],
-                                                        mensagem: message}
-                                    client.deletemessage(channel, `${username['id']}`)
-                                    console.log(red + `Mensagem "${message}" de @${username["display-name"]} apagada por conter link` + reset)
-                                }   
-                            }
-                        }                       
-                    }
-                }
+        // NON COMMAND
+        // Blacklist
+        for (let blacklist of Blacklist.palavra) {
+            if (message.toLowerCase().split(' ').includes(blacklist) == true) {
+                client.timeout(channel, username['display-name'], 600, 'Frase ofensiva')   
+                client.say(channel, 'Palavra feia')
             }
-
-
-
-
-
-            // BlackList 
-            for (let blacklist of BlackList.palavra) {
-                if (message.toLowerCase().includes(blacklist) == true) {
-                    client.timeout(channel, username['display-name'], 600, 'Frase ofensiva')
-                    lastTimeout = username['display-name']    
-                    console.log(`${red}Mensagem de ${yel + username['display-name'] + red} apagada por conter FRASE OFENSIVA ("${blacklist}"):  _  ${message}: ` + reset)           
-                }
+        }
+        for (let blacklist of Blacklist.frase) {
+            if (message.toLowerCase().includes(blacklist) == true) {
+                client.timeout(channel, username['display-name'], 600, 'Palavra ofensiva')
+                client.say(channel, 'Frase feia')
             }
-            for (let blacklist of BlackList.frase) {
-                if (message.toLowerCase().split(' ').includes(blacklist) == true) {
-                    client.timeout(channel, username['display-name'], 600, 'Palavra ofensiva')
-                    lastTimeout = username['display-name'] 
-                    console.log(`${red}Mensagem de ${yel + username['display-name'] + red} apagada por conter PALAVRA OFENSIVA ("${blacklist}"):  _  ${message}: ` + reset) 
-                }
-            }
-
-
+        }
 
     }
+
+    // OFF BOT
+    if (message == '!kawobot on' && username['mod'] == true || message == '!kawobot on' && username['badges']['broadcaster'] == '1') {
+        client.action(channel, 'Kawobot Ativo')
+    }
+
 }
 
 module.exports = chat
