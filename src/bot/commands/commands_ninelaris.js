@@ -101,10 +101,10 @@ chat = function (client, channel, username, message, self, configs) {
 
                         // mensagem pura
                         Message = cmd['Message'].replace(cmd['Message'].split(' ')[0], '').replace(cmd['Message'].split(' ')[1], '').replace(cmd['Message'].split(' ')[2], '').replace(/^\s*/, '')
-                        Message = Message.replace('[_USER_]', `${username['display-name']}`)
-                        Message = Message.replace('[_PERCENT_]', `${Math.ceil(Math.random(0, 101) * 100)}%`)
-                        Message = Message.replace('[_TOUSER_]', `${message.replace(message.split(' ')[0], '').replace(/^\s*/, '')}`)
-                        Message = Message.replace('[_COMMANDS_]', `${allcommands}`)
+                        Message = Message.replace('(_USER_)', `${username['display-name']}`)
+                        Message = Message.replace('(_PERCENT_)', `${Math.ceil(Math.random(0, 101) * 100)}%`)
+                        Message = Message.replace('(_TOUSER_)', `${message.replace(message.split(' ')[0], '').replace(/^\s*/, '')}`)
+                        Message = Message.replace('(_COMMANDS_)', `${allcommands}`)
 
 
                         // MOD COMMANDS
