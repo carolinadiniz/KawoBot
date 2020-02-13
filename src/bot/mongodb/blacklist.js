@@ -29,6 +29,7 @@ module.exports = {
     'cuca beludo',
     'mello pinto',
     'mia regazza',
+    'poderia por favor deixar um like e um comentário no vídeo do meu amigo',
 
     
 
