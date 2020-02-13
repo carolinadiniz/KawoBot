@@ -1,0 +1,17 @@
+!kcommands | mostra todos os comandos (exceto comandos mods)
+
+Adicionar comando
+!kcommand add teste Mensagem teste
+
+Atualizar comando
+!kcommand add teste Mensagem teste modificada
+
+Deletar comando
+!kcommand delete teste
+
+
+RECURSOS PARA COMANDOS
+(_USER_)        = retorna o usuário que mandou a mensagem
+(_PERCENT_)     = reotrna uma porcentagem aleatória
+(_TOUSER_)      = retorna a mensagem do usuário
+(_COMMANDS_)    = retorna todos os comandos do canal
