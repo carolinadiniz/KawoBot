@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 require('../mongodb/config_commands')
+require('../mongodb/config_channels')
 const config_commands = mongoose.model('config_commands')
+const config_channels = mongoose.model('config_channels')
 const Blacklist = require('../mongodb/blacklist')
 
 
@@ -150,7 +152,12 @@ chat = function (client, channel, username, message, self, configs) {
 
     // OFF BOT
     if (message == '!kawobot on' && username['mod'] == true || message == '!kawobot on' && username['badges']['broadcaster'] == '1') {
-        client.action(channel, 'Kawobot Ativo')
+        config_channels.findOneAndUpdate({channel: channel.substr(1)}, {$set:{bot: true}}, {new: true}, (err, doc) => {console.log(doc)})
+        client.action(channel, ' Kawobot Ativado')
+    }
+    if (message == '!kawobot off' && username['mod'] == true || message == '!kawobot off' && username['badges']['broadcaster'] == '1') {
+        config_channels.findOneAndUpdate({channel: channel.substr(1)}, {$set:{bot: false}}, {new: false}, (err, doc) => {console.log(doc)})
+        client.action(channel, ' Kawobot Desativado')
     }
 
 }

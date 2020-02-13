@@ -15,3 +15,9 @@ RECURSOS PARA COMANDOS
 (_PERCENT_)     = reotrna uma porcentagem aleatória
 (_TOUSER_)      = retorna a mensagem do usuário
 (_COMMANDS_)    = retorna todos os comandos do canal
+
+
+
+LIGAR E DESLIGAR BOT
+!kawobot on
+!kawobot off
