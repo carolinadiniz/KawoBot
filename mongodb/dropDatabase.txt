@@ -1,4 +1,0 @@
-mongo
-use kawobotdb
-db.dropDatabase()
-show dbs

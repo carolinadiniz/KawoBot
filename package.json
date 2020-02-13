@@ -1,19 +1,20 @@
 {
   "name": "kawobot",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "",
-  "main": "kawobot.js",
+  "main": "main.js",
+  "dependencies": {
+    "mongoose": "^5.8.11",
+    "tmi.js": "^1.5.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "mongodb": "^3.5.2",
-    "mongoose": "^5.8.11",
-    "mysql2": "^2.1.0",
-    "sequelize": "^5.21.3",
-    "tmi.js": "^1.5.0"
-  }
+  "repository": {
+    "type": "git",
+    "url": "github.com/kaworii/kawobot"
+  },
+  "author": "kaworii",
+  "license": "ISC"
 }
