@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
-require('./mongodb/Channel')
-const Channel = mongoose.model('channels')
+require('./mongodb/config_channels')
+const config_channels = mongoose.model('config_channels')
 Channels = []
 
 // Carregando Canais
-Channel.find().then((channels)=>{
+config_channels.find().then((channels)=>{
     for (let channel of channels) {
         Channels.push(channel['channel'])
     }
