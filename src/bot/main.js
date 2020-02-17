@@ -37,13 +37,20 @@ client.on("chat", function (channel, username, message, self) {
     // NINELARIS
     if (channel == '#ninelaris') {
         Config_channels.findOne({channel: 'ninelaris'}).then((configs) => {
-            new commands_ninelaris(client, channel, username, message, self, configs)
+            new commands_is_kaworii(client, channel, username, message, self, configs)
         }).catch()
     }
 
     // IS_KAWORII
     if (channel == '#is_kaworii') {
         Config_channels.findOne({channel: 'is_kaworii'}).then((configs) => {
+            new commands_is_kaworii(client, channel, username, message, self, configs)
+        }).catch()
+    }
+
+    // NICHOLAS
+    if (channel == '#itzstrikerz') {
+        Config_channels.findOne({channel: 'itzstrikerz'}).then((configs) => {
             new commands_is_kaworii(client, channel, username, message, self, configs)
         }).catch()
     }

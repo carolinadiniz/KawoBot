@@ -1,8 +1,12 @@
 const mongoose = require('mongoose')
+require('../mongodb/config_logs')
 require('../mongodb/config_commands')
 require('../mongodb/config_channels')
+require('../mongodb/config_blacklist')
+const config_log = mongoose.model('config_logs')
 const config_commands = mongoose.model('config_commands')
 const config_channels = mongoose.model('config_channels')
+const config_blacklist = mongoose.model('config_blacklist')
 const Blacklist = require('../mongodb/blacklist')
 
 
@@ -88,6 +92,56 @@ chat = function (client, channel, username, message, self, configs) {
                     }
                 }
 
+
+                // BLACKLIST COMMAND
+                if (message.split(' ')[0].toLowerCase() == '!blacklist') {
+                    if (message.split(' ')[1].toLowerCase() == 'list') {
+                        console.log('AAAAAAA LISTA AAAAAAAAAA')
+                    } else if (message.split(' ')[1].toLowerCase() == 'add') {
+                        Message = message.replace(message.split(' ')[0], '').replace(message.split(' ')[1], '').replace(/^\s*/, '').split(' ')
+                        points = Message.pop()
+                        punishment = Message.pop()
+                        frase = null
+                        word = null
+                        if (Message[1] == undefined) {
+                            word = `${Message}`
+                            frase = null
+                        } else {
+                            frase = ''
+                            for (let msg of Message) {
+                                frase = frase + ' ' + msg
+                            }
+                            frase = frase.replace(/^\s*/, '').toLowerCase()
+                        }
+                        
+                        
+
+                        const newBlacklist = {
+                            channel: channel,
+                            word: word,
+                            phrase: frase,
+                            punishment:  punishment,
+                            points: points
+                        }
+
+                        new config_blacklist(newBlacklist).save().then((doc) => {
+                            console.log('Frase adiciona a Blacklist')
+                            console.log(doc)
+                            client.say(channel, 'Frase adicionada a blacklist com sucesso!')
+
+                        }).catch((err) => {
+                            console.log('Falha ao adicionar frase a Blacklist')
+                        })
+
+                        
+                    }
+                    
+
+                }
+
+
+
+                
             }
 
             // COMMON COMMANDS
@@ -113,7 +167,7 @@ chat = function (client, channel, username, message, self, configs) {
                         if (cmd['permission'] == 'mod' && username['mod'] == true || cmd['permission'] == 'mod' && username['badges']['broadcaster'] == '1') {
                             if (message.toLowerCase().split(' ')[0].substr(1) == cmd['name_command']) {
                                 client.say(channel, Message)
-                            } 
+                            }
                         }
 
                         // COMMON COMMANDS
@@ -125,28 +179,167 @@ chat = function (client, channel, username, message, self, configs) {
                     }
                 }
             })
-            
-            
-            
-
-
         }
 
 
         // NON COMMAND
         // Blacklist
-        for (let blacklist of Blacklist.palavra) {
-            if (message.toLowerCase().split(' ').includes(blacklist) == true) {
-                client.timeout(channel, username['display-name'], 600, 'Frase ofensiva')   
-                client.say(channel, 'Palavra feia')
+        config_blacklist.find({channel: channel}).then((Blacklist) => {
+            for (let blacklist of Blacklist) {
+                if (message.toLowerCase().includes(blacklist['phrase']) == true) {
+                    config_log.find({channel: channel}).then((Logs) => {
+                        if (Logs[0] == undefined) {
+                            const newLog = {
+                                channel: channel,
+                                nick: `${username['display-name']}`,
+                                Message: message + ` (${blacklist['punishment']})(${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()})`,
+                                punishment: blacklist['punishment'],
+                                points: 100 - blacklist['points'],
+                                date: Date()
+                            }
+                            
+                            new config_log(newLog).save().then((doc) => {
+                                console.log(doc)
+                            }).catch(() => {
+                                console.log('Falha ao adicionar novo usuário ao log')
+                            })
+                        }
+                                            
+                        for (let logs of Logs) {
+                            console.log('3')
+                            if (username['display-name'] == logs['nick']) {
+                                config_log.findOneAndUpdate({nick: username['display-name']},{$set: {
+                                    Message: `${logs['Message']} | ${message + ` (${blacklist['punishment']})(${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()})`}`, 
+                                    punishment: `${logs['punishment']}, ${blacklist['punishment']}`,
+                                    date: new Date(),
+                                    points: parseInt(logs['points']) - parseInt(blacklist['points'])
+                                }}, {new: true}, (err, doc) => { console.log(doc) })
+
+                                
+                            } else {
+                                console.log('4')
+                                const newLog = {
+                                    channel: channel,
+                                    nick: `${username['display-name']}`,
+                                    Message: message + ` (${blacklist['punishment']})(${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()})`,
+                                    punishment: blacklist['punishment'],
+                                    points: 100 - blacklist['points'],
+                                    date: Date()
+                                }
+                                
+                                new config_log(newLog).save().then((doc) => {
+                                    console.log(doc)
+                                }).catch(() => {
+                                    console.log('Falha ao adicionar novo usuário ao log')
+                                })
+                            }
+                        }
+
+                        if (blacklist['punishment'] == 'delete') {
+                            client.deletemessage(channel, username['id'])
+                        }
+                        if (blacklist['punishment'] == 'ban') {
+                            client.ban(channel, username['display-name'], 'banido pela utilização de frase extremamente ofensiva')
+                        }
+                        if (blacklist['punishment'] != 'ban' && blacklist['punishment'] != 'delete') {
+                            punishment = parseInt(blacklist['punishment'])
+                            client.timeout(channel, username['display-name'], punishment,'timeouted por usar frase ofensiva')
+                        }
+                        if (blacklist['points'] <= 0) {
+                            config_log.findOneAndUpdate({nick: username['display-name']},{$set: {
+                                Message: `${logs['Message']} | ${message + ` (${blacklist['punishment']})(${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()})`}`, 
+                                punishment: `${logs['punishment']}, ${blacklist['punishment']}`,
+                                date: new Date(),
+                                points: parseInt(logs['points']) - parseInt(blacklist['points'])
+                            }}, {new: true}, (err, doc) => { console.log(doc) })
+
+                            client.ban(channel, username['display-name'], 'banido por histórico ruim no canal')
+
+                        }
+                    })
+                }
+                // =========================================================================================================================================================================
+                if (message.toLowerCase().split(' ').includes(blacklist['word']) == true) {
+                    config_log.find({channel: channel}).then((Logs) => {
+                        if (Logs[0] == undefined) {
+                            const newLog = {
+                                channel: channel,
+                                nick: `${username['display-name']}`,
+                                Message: message + ` (${blacklist['punishment']})(${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()})`,
+                                punishment: blacklist['punishment'],
+                                points: parseInt(logs['points']) - parseInt(blacklist['points']),
+                                date: Date()
+                            }
+                            
+                            new config_log(newLog).save().then((doc) => {
+                                console.log(doc)
+                            }).catch(() => {
+                                console.log('Falha ao adicionar novo usuário ao log')
+                            })
+                        }
+                                            
+                        for (let logs of Logs) {
+                            console.log('3')
+                            if (username['display-name'] == logs['nick']) {
+                                config_log.findOneAndUpdate({nick: username['display-name']},{$set: {
+                                    Message: `${logs['Message']} | ${message + ` (${blacklist['punishment']})(${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()})`}`, 
+                                    punishment: `${logs['punishment']}, ${blacklist['punishment']}`,
+                                    date: new Date()
+                                }}, {new: true}, (err, doc) => { console.log(doc) })
+
+                                
+                            } else {
+                                console.log('4')
+                                const newLog = {
+                                    channel: channel,
+                                    nick: `${username['display-name']}`,
+                                    Message: message + ` (${blacklist['punishment']})(${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()})`,
+                                    punishment: blacklist['punishment'],
+                                    points: 100 - blacklist['points'],
+                                    date: Date()
+                                }
+                                
+                                new config_log(newLog).save().then((doc) => {
+                                    console.log(doc)
+                                }).catch(() => {
+                                    console.log('Falha ao adicionar novo usuário ao log')
+                                })
+                            }
+                        }
+
+                        if (blacklist['punishment'] == 'delete') {
+                            client.deletemessage(channel, username['id'])
+                        }
+                        if (blacklist['punishment'] == 'ban') {
+                            client.ban(channel, username['display-name'], 'banido por usar palavra extremamente ofensiva')
+                        }
+                        if (blacklist['punishment'] != 'ban' && blacklist['punishment'] != 'delete') {
+                            punishment = parseInt(blacklist['punishment'])
+                            client.timeout(channel, username['display-name'], punishment,'timeouted por usar palavra ofensiva')
+                        }
+                        if (blacklist['points'] <= 0) {
+                            config_log.findOneAndUpdate({nick: username['display-name']},{$set: {
+                                Message: `${logs['Message']} | ${message + ` (${blacklist['punishment']})(${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()} ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()})`}`, 
+                                punishment: `${logs['punishment']}, ${blacklist['punishment']}`,
+                                date: new Date(),
+                                points: parseInt(logs['points']) - parseInt(blacklist['points'])
+                            }}, {new: true}, (err, doc) => { console.log(doc) })
+
+                            client.ban(channel, username['display-name'], 'banido por histórico ruim no canal')
+
+                        }
+                    })
+                }
             }
+        })
+        
+
+
+        if (message == 'a') {
+            client.say(channel, '/unban is_kaworii')
         }
-        for (let blacklist of Blacklist.frase) {
-            if (message.toLowerCase().includes(blacklist) == true) {
-                client.timeout(channel, username['display-name'], 600, 'Palavra ofensiva')
-                client.say(channel, 'Frase feia')
-            }
-        }
+
+
 
     }
 

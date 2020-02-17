@@ -22,7 +22,7 @@ var options = {
         reconnectInterval: 1000
     },
     identity: {
-        username: "kaworii2",
+        username: "kawobot",
         password: "mgggjo7yfb6lihg9jek3wryj6dmfw3"
     },
     channels: Channels

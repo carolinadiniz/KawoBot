@@ -13,8 +13,8 @@ mongoose.connect('mongodb://localhost/kawobotdb', {useNewUrlParser: true, useUni
 
 // Configurações do canal
 const newConfigChannel = {
-    nome: 'Ninelaris',
-    channel: 'ninelaris', //Obrigatório
+    nome: 'Nicholas',
+    channel: 'itzstrikerz', //Obrigatório
 }
 
 // Adicionando Schema

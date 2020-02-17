@@ -30,6 +30,12 @@ module.exports = {
     'mello pinto',
     'mia regazza',
     'poderia por favor deixar um like e um comentário no vídeo do meu amigo',
+    'mostra a bunda ae',
+    'você é muito gostasa',
+    'voce é muito gostasa',
+    'voce e muito gostasa',
+    'vc é muito gostasa',
+    'c é muito gostasa',
 
     
 
