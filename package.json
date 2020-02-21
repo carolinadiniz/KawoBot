@@ -1,20 +1,23 @@
 {
   "name": "kawobot",
-  "version": "2.0.0",
-  "description": "",
-  "main": "main.js",
-  "dependencies": {
-    "mongoose": "^5.8.11",
-    "tmi.js": "^1.5.0"
-  },
-  "devDependencies": {},
+  "version": "2.1.0",
+  "description": "Um chat bot para twitch com foco em facilitar a moderação e interação com o chat",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "github.com/kaworii/kawobot"
+    "url": "git+https://github.com/Kaworii/kawobot.git"
   },
-  "author": "kaworii",
-  "license": "ISC"
+  "author": "Kaworii",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kaworii/kawobot/issues"
+  },
+  "homepage": "https://github.com/Kaworii/kawobot#readme",
+  "dependencies": {
+    "mongoose": "^5.9.1",
+    "tmi.js": "^1.5.0"
+  }
 }
