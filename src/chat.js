@@ -17,18 +17,17 @@ module.exports = chat = function(client, channel, username, message, self) {
     // USER
     userInfo = function(username) {
         mod = false
-        config_channel.find({channel: channel}).then((Channel) => {
-            if (Channel[0]['kaworiiAdmin'] == true && username['display-name'] == 'is_Kaworii') {
-                mod = true
-            }
-        
         if (username['mod'] == true) { mod = true }
-        try { if (username['badges']['broadcaster'] == '1') { mod = true } }
-        catch (e) {}
+        try {
+            if (username['badges']['broadcaster'] === '1') {
+                mod = true 
+            }
+        } 
+        catch(e) {}       
         user = {
             mod: mod, 
             subscriber: username['subscriber']
-        }})
+        }
         return user
     }
     user = userInfo(username)
