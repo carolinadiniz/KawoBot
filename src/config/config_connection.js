@@ -3,17 +3,17 @@ const mongoose = require('mongoose')
 const config_channels = mongoose.model('config_channels')
 
 
-// LOADING CHANNELS
+
+
 Channels = []
 config_channels.find().then((channels) => {
     for (let channel of channels) {
-        Channels.push(channel['channel'])
+        Channels.push(channel['channel'].substr(1))
     }
+console.log(Channels)
 })
 
-
-// OPTIONS
-var options = {
+module.exports = options = {
     options: {
         debug: true
     },
@@ -28,8 +28,7 @@ var options = {
         password: "mgggjo7yfb6lihg9jek3wryj6dmfw3"
     },
     channels: 
-        ['itzstrikerz', 'is_kaworii', 'ninelaris']
-        //Channels
+        //['is_kaworii', 'ninelaris']
+        Channels
 }
 
-module.exports = options

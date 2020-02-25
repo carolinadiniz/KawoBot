@@ -1,0 +1,112 @@
+// CONSOLE COMMANDS
+cls
+
+
+//  K C O M M A N D S 
+ O comando "!kcommand" é usado para criar novos comandos de resposta no chat.
+ Existem 3 subcomandos:
+   add: é usado para criar novo comando
+   delete: é usando para deletar algum comando
+   setcount: é usado para configurar contador do comando
+
+
+--- Add ---
+ Para adicionar novo comando basta seguir o exemplo (sem aspas):
+ !kcommand add "nome do comando" "mensagem" 
+
+ "nome do comando": o nome pode conter acentos, números e pontuações, mas NÃO pode conter espaço.
+ "mensagem": A mensagem pode conter algumas strings especiais, por exemplo: Há (_PERCENT_) de LuvSign entre (_USER_) e (_TOUSER_)
+    (_USER_)        substitui por usuário que mandou o comando
+    (_TOUSER_)      substitui por complemento da mensagem
+    (_RANDOM_)      substitui por número entre 1 e 100
+    (_PERCENT_)     substitui por porcentagem de 1 à 100
+    (_COMMANDS_)    substitui por todos os comandos
+    (_COUNT_)       substitui por contador
+    
+
+--- Delete ---
+ Para deletar algum comandos
+ Exemplos: 
+  !kcommand delete "nome do comando"
+  !kcommand delete "nome do comando"
+
+
+--- Setcount ---
+ Se a mensagem conter a string (_COUNT_), pode ser configurada com outro número.
+ Exemplos:
+    !ksetcount "nome do comando" "número"
+    !ksetcount morri 231
+
+
+--- kcommands ---
+ Se você deseja saber todos os comandos adicionados ao seu canal, basta seguir o exemplo
+ !kcommands
+
+
+
+
+
+
+
+
+//  B L A C K L I S T 
+--- Add ---
+ A Blacklist funciona comparando as mensagens dos usuários com a blacklist, se
+encontrar algo igual, o bot puni com base no banco de dados. 
+ As 'punições' podem ser definidas como: 
+    delete: deleta a mensagem
+    número: o número será o tempo de timeout em segundos, mas só pode conter números, ex: 600
+    ban: bane usuário
+
+ Os 'pontos' ainda estão em desenvolvimento, então o deixe sempre como 0.
+ Exemplos:
+  !blacklist add 'frase ofensiva' 'punição' 'pontos'
+  !blacklist add sexo delete 0
+
+
+--- Delete ---
+ O subcomando delete é usado para deletar a frase/palavra do banco de dados (- Não me diga! Nem imaginava!)
+ Exemplos:
+  !blacklist delete 'frase ofensiva'
+  !blacklist delete sexo
+
+
+--- List ---
+ O subcomando list é usado para listar no chat todos as frases da blacklist. Mas esteja preparado para usar !clear ou /clear.
+ !blacklist list
+
+
+
+
+
+
+
+//  C O M A N D O S   P A R A   S E R V I D O R  
+!kawobot on         Ativa o bot
+!kawobot off        Desativa o bot
+!kawobot update     Atualiza bando de dados
+!clear              Limpa o chat (Mas não funciona para quem usa BTTV)
+
+
+
+
+
+
+
+
+// KAWORII ADMIN
+!kaworiiadmin kawobot on
+!kaworiiadmin kawobot off
+
+!kaworiiadmin new channel 'canal'
+!kaworiiadmin delete channel 'canal'
+!kaworiiadmin list channels
+
+!kaworiiadmin mod on
+!kaworiiadmin mod off
+
+!kaworiiadmin delete list 'canal'
+!kaworiiadmin delete log 'user' 
+
+
+

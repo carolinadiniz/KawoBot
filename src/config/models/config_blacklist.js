@@ -18,7 +18,10 @@ const Config_blacklist = new Schema({
     points: {
         type: Number,
         default: 100
-    }
+    },
+    capslock: {
+        type: String
+    } 
 
 })
 

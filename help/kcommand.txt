@@ -1,9 +1,0 @@
-* kcommands:
-
-Para adicionar comandos use !kcommands add [nome_do_comando] [mensagem]
-    exemplo: !kcommands add teste Esta é uma mensagem teste
-
-        log:
-            usuário: !teste
-            kawobot: Esta é uma mensagem teste
-

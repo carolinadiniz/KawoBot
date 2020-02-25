@@ -22,6 +22,10 @@ const Config_channels = new Schema({
     filter_link_youtube: {
         type: Boolean,
         default: false
+    }, 
+    kaworiiAdmin: {
+        type: Boolean,
+        default: false
     }
 
 })

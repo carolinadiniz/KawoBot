@@ -3,16 +3,19 @@ const Schema = mongoose.Schema
 
 const Config_commands = new Schema({
     permission: {
-        type: String
+        type: String,
+        default: 'common'
     },
     channel: {
         type: String
     },
     type: {
-        type: String
+        type: String,
+        default: 'word'
     },
     includes: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     name_command: {
         type: String
