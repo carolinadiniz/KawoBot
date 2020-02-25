@@ -7,7 +7,7 @@ var config_channel = mongoose.model('config_channels')
 var commands_update = require('./config/commands/commands_update')
 
 
-module.exports = chat = function(client, channel, username, message, self) {console.log('new chat()')   
+module.exports = chat = function(client, channel, username, message, self) {
     
 
     if (self) { return; } else {
