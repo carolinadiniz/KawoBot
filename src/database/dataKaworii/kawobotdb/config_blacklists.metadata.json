@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"kawobotdb.config_blacklists"}],"uuid":"bd4cab7ed39e417ea0e37b3fa2924243"}
