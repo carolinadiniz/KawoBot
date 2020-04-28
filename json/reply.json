@@ -1,0 +1,16 @@
+{
+	"#is_kaworii": {
+		"discord": {
+			"message_content": "Tem algumas do Discord ^^ : https://discord.gg/68RdS2h"
+		},
+		"hug": {
+			"message_content": "♥ {user.name} abraçou {target.name}! ♥"
+		},
+		"oi": {
+			"message_content": "Olá!"
+		},
+		"comida": {
+			"message_content": "A kaworii já fez {count.comida} lanches, vai engordar!"
+		}
+	}
+}
