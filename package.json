@@ -1,0 +1,22 @@
+{
+  "name": "kawobot",
+  "version": "2.0.0",
+  "description": "A Javascrip bot for the Twitch Message Interface. (twitch.tv)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carolinadiniz/KawoBot.git"
+  },
+  "author": "Carolina Diniz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/carolinadiniz/KawoBot/issues"
+  },
+  "homepage": "https://github.com/carolinadiniz/KawoBot#readme",
+  "dependencies": {
+    "tmi.js": "^1.5.0"
+  }
+}
